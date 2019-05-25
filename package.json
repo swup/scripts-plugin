@@ -1,6 +1,6 @@
 {
   "name": "@swup/scripts-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Swup plugin for auto re-running of included scripts.",
   "main": "lib/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/swup/head-plugin.git"
+    "url": "https://github.com/swup/scripts-plugin.git"
   },
   "devDependencies": {
     "@swup/prettier-config": "^1.0.0",
