@@ -10,7 +10,8 @@ export default class ScriptsPlugin extends Plugin {
 
 		const defaultOptions = {
 			head: true,
-			body: true
+			body: true,
+			optin: false
 		};
 
 		this.options = {
@@ -35,7 +36,8 @@ export default class ScriptsPlugin extends Plugin {
 				? document.head
 				: document.body;
 
-		const scripts = arrayify(scope.querySelectorAll('script:not([data-swup-ignore-script])'));
+		const selector = this.options.optin ? 'script[data-swup-reload-script]' : 'script:not([data-swup-ignore-script])';
+		const scripts = arrayify(scope.querySelectorAll(selector));
 
 		scripts.forEach((script) => this.runScript(script));
 
