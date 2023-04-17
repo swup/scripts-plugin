@@ -1,34 +1,29 @@
 # Swup Scripts Plugin
 
-This plugin re-runs any scripts in head/body on swups `contentReplaced` event.
-This can be helpful when the scripts included in the page are outside of the control of the developer and needs to be re-evaluated after content replace.
+This plugin re-evaluates any `<script>` tags inside the `<head>` and/or `<body>` of your website on swup's `contentReplaced` event. This can be helpful if you don't have full control over the scripts included on your website and need to re-run certain scripts on every page view.
 
-Plugin will ignore any script tags with attribute `data-swup-ignore-script`.
-It is also necessary to add this attribute to any scripts loading and enabling swup,
-to prevent creating of multiple instances of swup and prevent unnecessary swup class evaluation.
+The plugin will ignore any script tags with the attribute `[data-swup-ignore-script]`. It is also necessary to add this attribute to the script from where you are initializing swup itself, to prevent the creation of multiple swup instances.
 
-**Warning:** This plugin is only intended as last resort for projects with little control over what scripts are included.
-Re-running your scripts without destroying remains of previous run can lead to memory leaks and breaking of the page.
-Use at own risk.
+**🚨Warning:** This plugin is only intended as a last resort for projects with little control over what scripts are included.
+Re-running your scripts without first destroying any previous scripts can lead to memory leaks and in the worst case break your page.
+Use this at your own risk.
 
-## Instalation
+## Installation
 
-This plugin can be installed with npm
+Install the plugin from npm and import it into your bundle.
 
 ```bash
 npm install @swup/scripts-plugin
 ```
 
-and included with import
-
 ```javascript
 import SwupScriptsPlugin from '@swup/scripts-plugin';
 ```
 
-or included from the dist folder
+Or include the minified production file from a CDN:
 
 ```html
-<script src="./dist/SwupScriptsPlugin.js"></script>
+<script src="https://unpkg.com/@swup/scripts-plugin@1"></script>
 ```
 
 ## Usage
@@ -44,8 +39,8 @@ const swup = new Swup({
 ## Options
 
 ### `head` and `body`
-Plugin has two boolean options - `head` and `body`. Both are by default set to `true`.
-Options can be used to disable re-running of scripts globally in head or body of the page.
+The plugin provides two boolean options - `head` and `body`. Both are set to `true` by default.
+Set these to `false` to disable re-evaluating scripts globally in the head or body of your website.
 
 ```javascript
 new SwupScriptsPlugin({
@@ -55,8 +50,8 @@ new SwupScriptsPlugin({
 ```
 
 ### optin
-In some situations, you might not have control over inserted scripts into the page (through GTM for example).
-In that case, switching `optin` option to `true` will only reload the scripts explicitly marked with `data-swup-reload-script` attribute. 
+In some situations, you might not have control over inserted scripts into the page (through Google Tag Manager, for example).
+In that case, setting the `optin` option to `true` will only reload the scripts explicitly marked with the `[data-swup-reload-script]` attribute. 
 
 ```javascript
 new SwupScriptsPlugin({
