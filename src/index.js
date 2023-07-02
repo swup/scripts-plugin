@@ -1,9 +1,9 @@
 import Plugin from '@swup/plugin';
 
 const arrayify = (list) => Array.prototype.slice.call(list);
+export default class SwupScriptsPlugin extends Plugin {
+	name = 'SwupScriptsPlugin';
 
-export default class ScriptsPlugin extends Plugin {
-	name = 'ScriptsPlugin';
 
 	constructor(options) {
 		super();
