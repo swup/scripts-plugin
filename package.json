@@ -1,8 +1,8 @@
 {
   "name": "@swup/scripts-plugin",
-  "description": "Swup plugin for auto re-running of included scripts.",
   "amdName": "SwupScriptsPlugin",
   "version": "2.0.0",
+  "description": "A swup plugin for re-evaluating scripts",
   "type": "module",
   "source": "src/index.js",
   "main": "./dist/index.cjs",
