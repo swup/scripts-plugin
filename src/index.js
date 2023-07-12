@@ -15,11 +15,11 @@ export default class SwupScriptsPlugin extends Plugin {
 	}
 
 	mount() {
-		this.swup.hooks.on('replaceContent', this.runScripts);
+		this.swup.hooks.on('content:replace', this.runScripts);
 	}
 
 	unmount() {
-		this.swup.hooks.off('replaceContent', this.runScripts);
+		this.swup.hooks.off('content:replace', this.runScripts);
 	}
 
 	getScope({ head, body }) {
