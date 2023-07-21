@@ -3,6 +3,10 @@ import Plugin from '@swup/plugin';
 export default class SwupScriptsPlugin extends Plugin {
 	name = 'SwupScriptsPlugin';
 
+	requires = {
+		swup: '>=4',
+	};
+
 	defaults = {
 		head: true,
 		body: true,
@@ -10,16 +14,38 @@ export default class SwupScriptsPlugin extends Plugin {
 	};
 
 	constructor(options = {}) {
-		super();
 		this.options = { ...this.defaults, ...options };
 	}
 
 	mount() {
-		this.swup.hooks.on('content:replace', this.runScripts);
+		this.on('content:replace', this.runScripts);
 	}
 
-	unmount() {
-		this.swup.hooks.off('content:replace', this.runScripts);
+	runScripts() {
+		const { head, body, optin } = this.options;
+		const scope = this.getScope({ head, body });
+		if (!scope) {
+			return;
+		}
+
+		const selector = optin ? 'script[data-swup-reload-script]' : 'script:not([data-swup-ignore-script])';
+		const scripts = Array.from(scope.querySelectorAll(selector));
+		scripts.forEach((script) => this.runScript(script));
+
+		this.swup.log(`Executed ${scripts.length} scripts.`);
+	}
+
+	runScript(originalElement) {
+		const element = document.createElement('script');
+
+		for (const { name, value } of originalElement.attributes) {
+			element.setAttribute(name, value);
+		}
+		element.setAttribute('async', 'false');
+		element.textContent = originalElement.textContent;
+
+		originalElement.replaceWith(element);
+		return element;
 	}
 
 	getScope({ head, body }) {
@@ -34,31 +60,4 @@ export default class SwupScriptsPlugin extends Plugin {
 		}
 		return null;
 	}
-
-	runScripts = () => {
-		const { head, body, optin } = this.options;
-		const scope = this.getScope({ head, body });
-		if (!scope) {
-			return;
-		}
-
-		const selector = optin ? 'script[data-swup-reload-script]' : 'script:not([data-swup-ignore-script])';
-		const scripts = Array.from(scope.querySelectorAll(selector));
-		scripts.forEach((script) => this.runScript(script));
-
-		this.swup.log(`Executed ${scripts.length} scripts.`);
-	};
-
-	runScript = (originalElement) => {
-		const element = document.createElement('script');
-
-		for (const { name, value } of originalElement.attributes) {
-			element.setAttribute(name, value);
-		}
-		element.setAttribute('async', 'false');
-		element.textContent = originalElement.textContent;
-
-		originalElement.replaceWith(element);
-		return element;
-	};
 }
