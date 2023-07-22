@@ -14,6 +14,7 @@ export default class SwupScriptsPlugin extends Plugin {
 	};
 
 	constructor(options = {}) {
+		super();
 		this.options = { ...this.defaults, ...options };
 	}
 
@@ -45,6 +46,7 @@ export default class SwupScriptsPlugin extends Plugin {
 		element.textContent = originalElement.textContent;
 
 		originalElement.replaceWith(element);
+
 		return element;
 	}
 
