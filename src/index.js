@@ -36,16 +36,13 @@ export default class SwupScriptsPlugin extends Plugin {
 		this.swup.log(`Executed ${scripts.length} scripts.`);
 	}
 
-	runScript(originalElement) {
+	runScript(script) {
 		const element = document.createElement('script');
-
-		for (const { name, value } of originalElement.attributes) {
+		for (const { name, value } of script.attributes) {
 			element.setAttribute(name, value);
 		}
-		element.setAttribute('async', 'false');
-		element.textContent = originalElement.textContent;
-
-		originalElement.replaceWith(element);
+		element.textContent = script.textContent;
+		script.replaceWith(element);
 
 		return element;
 	}
