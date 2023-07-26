@@ -1,59 +1,62 @@
 import Plugin from '@swup/plugin';
 
-const arrayify = (list) => Array.prototype.slice.call(list);
+export default class SwupScriptsPlugin extends Plugin {
+	name = 'SwupScriptsPlugin';
 
-export default class ScriptsPlugin extends Plugin {
-	name = 'ScriptsPlugin';
+	requires = {
+		swup: '>=4',
+	};
 
-	constructor(options) {
+	defaults = {
+		head: true,
+		body: true,
+		optin: false
+	};
+
+	constructor(options = {}) {
 		super();
-
-		const defaultOptions = {
-			head: true,
-			body: true,
-			optin: false
-		};
-
-		this.options = {
-			...defaultOptions,
-			...options
-		};
+		this.options = { ...this.defaults, ...options };
 	}
 
 	mount() {
-		this.swup.on('contentReplaced', this.runScripts);
+		this.on('content:replace', this.runScripts);
 	}
 
-	unmount() {
-		this.swup.off('contentReplaced', this.runScripts);
-	}
+	runScripts() {
+		const { head, body, optin } = this.options;
+		const scope = this.getScope({ head, body });
+		if (!scope) {
+			return;
+		}
 
-	runScripts = () => {
-		const scope =
-			this.options.head && this.options.body
-				? document
-				: this.options.head
-				? document.head
-				: document.body;
-
-		const selector = this.options.optin ? 'script[data-swup-reload-script]' : 'script:not([data-swup-ignore-script])';
-		const scripts = arrayify(scope.querySelectorAll(selector));
-
+		const selector = optin ? 'script[data-swup-reload-script]' : 'script:not([data-swup-ignore-script])';
+		const scripts = Array.from(scope.querySelectorAll(selector));
 		scripts.forEach((script) => this.runScript(script));
 
 		this.swup.log(`Executed ${scripts.length} scripts.`);
-	};
+	}
 
-	runScript = (originalElement) => {
+	runScript(script) {
 		const element = document.createElement('script');
-
-		for (const { name, value } of arrayify(originalElement.attributes)) {
+		for (const { name, value } of script.attributes) {
 			element.setAttribute(name, value);
 		}
-		element.textContent = originalElement.textContent;
-		element.setAttribute('async', 'false');
+		element.textContent = script.textContent;
+		script.replaceWith(element);
 
-		originalElement.replaceWith(element);
 		return element;
-	};
+	}
+
+	getScope({ head, body }) {
+		if (head && body) {
+			return document;
+		}
+		if (head) {
+			return document.head;
+		}
+		if (body) {
+			return document.body;
+		}
+		return null;
+	}
 }
