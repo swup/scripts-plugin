@@ -1,19 +1,27 @@
 import Plugin from '@swup/plugin';
 
+export type Options = {
+	head: boolean;
+	body: boolean;
+	optin: boolean;
+};
+
 export default class SwupScriptsPlugin extends Plugin {
 	name = 'SwupScriptsPlugin';
 
 	requires = {
-		swup: '>=4',
+		swup: '>=4'
 	};
 
-	defaults = {
+	defaults: Options = {
 		head: true,
 		body: true,
 		optin: false
 	};
 
-	constructor(options = {}) {
+	options: Options;
+
+	constructor(options: Partial<Options> = {}) {
 		super();
 		this.options = { ...this.defaults, ...options };
 	}
@@ -29,14 +37,17 @@ export default class SwupScriptsPlugin extends Plugin {
 			return;
 		}
 
-		const selector = optin ? 'script[data-swup-reload-script]' : 'script:not([data-swup-ignore-script])';
-		const scripts = Array.from(scope.querySelectorAll(selector));
+		const selector = optin
+			? 'script[data-swup-reload-script]'
+			: 'script:not([data-swup-ignore-script])';
+
+		const scripts = Array.from(scope.querySelectorAll<HTMLScriptElement>(selector));
 		scripts.forEach((script) => this.runScript(script));
 
 		this.swup.log(`Executed ${scripts.length} scripts.`);
 	}
 
-	runScript(script) {
+	runScript(script: HTMLScriptElement) {
 		const element = document.createElement('script');
 		for (const { name, value } of script.attributes) {
 			element.setAttribute(name, value);
@@ -47,16 +58,13 @@ export default class SwupScriptsPlugin extends Plugin {
 		return element;
 	}
 
-	getScope({ head, body }) {
-		if (head && body) {
-			return document;
-		}
-		if (head) {
-			return document.head;
-		}
-		if (body) {
-			return document.body;
-		}
+	getScope({ head, body }: Pick<Options, 'head' | 'body'>) {
+		if (head && body) return document;
+
+		if (head) return document.head;
+
+		if (body) return document.body;
+
 		return null;
 	}
 }
