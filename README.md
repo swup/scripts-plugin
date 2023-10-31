@@ -8,9 +8,7 @@ helpful if you don't have full control over the scripts included on your website
 Ignores any script tags with the attribute `[data-swup-ignore-script]`. This attribute **must be**
 on the script tag that initializes swup itself to prevent creating multiple swup instances.
 
-**🚨 Warning:** Use this plugin as a last resort for projects with limited control over the included
-scripts. Running scripts without destroying previous ones can cause memory leaks and potentially
-break your page.
+> **🚨 Warning:** Use this plugin as a last resort for projects with limited control over the included scripts. Running scripts without destroying previous ones can cause memory leaks and potentially break your page.
 
 ## Installation
 

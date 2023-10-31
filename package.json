@@ -1,22 +1,30 @@
 {
   "name": "@swup/scripts-plugin",
   "amdName": "SwupScriptsPlugin",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A swup plugin for re-evaluating scripts",
   "type": "module",
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.module.js",
-  "exports": "./dist/index.modern.js",
   "unpkg": "./dist/index.umd.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.modern.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build": "swup-plugin build",
-    "dev": "swup-plugin dev",
-    "lint": "swup-plugin lint",
-    "format": "swup-plugin format",
+    "build": "swup package:build",
+    "dev": "swup package:dev",
+    "lint": "swup package:lint",
+    "format": "swup package:format",
     "prepublishOnly": "npm run build"
   },
   "author": {
@@ -24,16 +32,31 @@
     "email": "gmarcuk@gmail.com",
     "url": "https://gmrchk.com/"
   },
+  "contributors": [
+    {
+      "name": "Philipp Daun",
+      "email": "daun@daun.ltd",
+      "url": "https://philippdaun.net"
+    },
+    {
+      "name": "Rasso Hilber",
+      "email": "mail@rassohilber.com",
+      "url": "https://rassohilber.com"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/swup/scripts-plugin.git"
   },
   "dependencies": {
-    "@swup/plugin": "^3.0.0"
+    "@swup/plugin": "^4.0.0"
+  },
+  "devDependencies": {
+    "@swup/cli": "^5.0.1"
   },
   "peerDependencies": {
-    "swup": "^4.0.0"
+    "swup": "^4.2.0"
   },
   "browserslist": [
     "extends @swup/browserslist-config"
